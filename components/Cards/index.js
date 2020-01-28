@@ -1,7 +1,8 @@
 // STEP 3: Create Article cards.
 // -----------------------
-// Send an HTTP GET request to the following address: https://lambda-times-backend.herokuapp.com/articles
-// Stduy the response data you get back, closely.
+// Send an HTTP GET request to the following address:
+// https://lambda-times-backend.herokuapp.com/articles
+// Study the response data you get back, closely.
 // You will be creating a component for each 'article' in the list.
 // This won't be as easy as just iterating over an array though.
 // Create a function that will programmatically create the following DOM component:
@@ -17,47 +18,49 @@
 // </div>
 //
 // Create a card for each of the articles and add the card to the DOM.
-const cards = document.querySelector("cards-container");
 
-axios
-  .get ("https://lambda-times-backend.herokuapp.com/articles")
-  .then(response => {
-      console.log(response);
-      Object.values(response.data.articles).forEach(item => {
-          item.forEach(item => {
-            let cards = document.querySelector(".cards-container");
-            cards.appendChild(articleCreate(item));
-          })
+axios.get('https://lambda-times-backend.herokuapp.com/articles')
+  .then((response) => {
+    console.log(response);
+    let cardsCont = document.querySelector(".cards-container");
+    let arrayValues = Object.values(response.data.articles);
+    arrayValues.forEach(element => {
+      element.forEach(article => {
+        cardsCont.appendChild(createCard(article));
+        console.log("CreatedCard");
       })
+    })
+  })
+  .catch((error) => {
+
   })
 
-  .catch(error => {
-      console.log(error);
-  })
+function createCard(object){
 
-  function articleCreate(article) {
+  let div = document.createElement("div");
+  div.classList.add("card");
 
-    const card = document.createElement("div");
-    const headline = document.createElement("div");
-    const author = document.createElement("div");
-    const imgContainer = document.createElement("div");
-    const img = document.createElement("img");
-    const span3 = document.createElement("span");
+  let div2 = document.createElement("div");
+  div2.classList.add("headline");
+  div2.innerHTML = object.headline;
+  div.appendChild(div2);
 
-    card.appendChild(headline);
-    card.appendChild(author);
-    card.appendChild(span3);
-    author.appendChild(imgContainer);
-    imgContainer.appendChild(img);
+  let div3 = document.createElement("div");
+  div3.classList.add("author");
+  div.appendChild(div3);
 
-    card.classList.add("card");
-    headline.classList.add("headline");
-    author.classList.add("author");
-    imgContainer.classList.add("img-container");
+  let div4 = document.createElement("div");
+  div4.classList.add("img-container");
+  div3.appendChild(div4);
 
-    img.src = article.authorPhoto;
-    span3.textContent = `By ${article.authorName}`;
-    headline.textContent = article.headline
+  let img = document.createElement("img");
+  img.src = object.authorPhoto;
+  div4.appendChild(img);
 
-    return card;
-  }
+  let span = document.createElement("span");
+  span.innerHTML = "By " + object.authorName;
+  div3.appendChild(span);
+
+  return div;
+
+}
